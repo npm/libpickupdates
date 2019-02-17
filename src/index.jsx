@@ -1,12 +1,13 @@
-import { Color, Text } from 'ink'
+import { Text } from 'ink'
 import React, { useState } from 'react'
-import { List, ListItem } from './list'
+import UpdatePicker from './update-picker'
 
 const STATES = {
   init: 'init',
   pickUpdates: 'pick-updates',
   updating: 'updating',
-  updated: 'updated'
+  updated: 'updated',
+  alreadyUpToDate: 'already-up-to-date'
 }
 
 export default function UpdateInteractiveComponent ({ stdin, unicode }) {
@@ -21,7 +22,13 @@ export default function UpdateInteractiveComponent ({ stdin, unicode }) {
     setState(STATES.updating)
   }
   if (state === STATES.init) {
-    setTimeout(() => setState(STATES.pickUpdates), 2000)
+    setTimeout(() => {
+      if (outdated.length) {
+        setState(STATES.pickUpdates)
+      } else {
+        setState(STATES.alreadyUpToDate)
+      }
+    }, 2000)
     return <Text>Loading...</Text>
   } else if (state === STATES.pickUpdates) {
     return <UpdatePicker
@@ -30,6 +37,9 @@ export default function UpdateInteractiveComponent ({ stdin, unicode }) {
       unicode={unicode}
       onSubmit={updateDeps}
     />
+  } else if (state === STATES.alreadyUpToDate) {
+    setImmediate(() => process.exit(0))
+    return <Text>Already up to date!</Text>
   } else if (state === STATES.updating) {
     setTimeout(() => setState(STATES.updated), 2000)
     return <Text>Installing updated deps...</Text>
@@ -37,21 +47,4 @@ export default function UpdateInteractiveComponent ({ stdin, unicode }) {
     setImmediate(() => process.exit(0))
     return <Text>Updated deps: {updated.join(', ')}</Text>
   }
-}
-
-function UpdatePicker ({ outdated = [], stdin, onSubmit, unicode }) {
-  return (
-    <div>
-      <Text bold>? Select packages to update.</Text>
-      <List stdin={stdin} onSubmit={onSubmit} unicode={unicode}>
-        {(outdated || []).map(out => {
-          return (
-            <ListItem key={out.name} value={out.name}>
-              <Color green>{out.name}</Color>
-            </ListItem>
-          )
-        })}
-      </List>
-    </div>
-  )
 }
