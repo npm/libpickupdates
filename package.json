@@ -51,7 +51,7 @@
   "bugs": "https://github.com/npm/npm-update-interactive-component/issues",
   "homepage": "https://npmjs.com/package/npm-update-interactive-component",
   "dependencies": {
-    "ink": "github:zkat/ink#next",
+    "ink": "^2.0.0-12",
     "libnpm": "^2.0.1",
     "react": "^16.8.2"
   },
