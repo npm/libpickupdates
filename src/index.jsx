@@ -27,7 +27,7 @@ export default function UpdateInteractiveComponent ({ stdin, unicode }) {
 function UpdatePicker ({ outdated = [], stdin, onSubmit, unicode }) {
   return (
     <div>
-      <Text bold>~ Select packages to update.</Text>
+      <Text bold>? Select packages to update.</Text>
       <List stdin={stdin} onSubmit={onSubmit} unicode={unicode}>
         {(outdated || []).map(out => {
           return (
