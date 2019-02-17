@@ -1,12 +1,7 @@
-import { Box, Color, StdinContext } from 'ink'
+import { Box, Color, Text } from 'ink'
 import React, { useEffect, useState } from 'react'
-import readline from 'readline'
 
-export default function UpdateInteractiveComponent () {
-  useEffect(() => {
-    const interval = setInterval(() => {}, 60000)
-    return () => clearInterval(interval)
-  })
+export default function UpdateInteractiveComponent ({ stdin, unicode }) {
   const [outdated, setOutdated] = useState([
     { name: 'lodash', wanted: '1.2.3', latest: '1.2.3', current: '1.2.0' },
     { name: 'libnpm', current: 'MISSING', wanted: '1.0.0', latest: '1.2.0' }
@@ -15,19 +10,12 @@ export default function UpdateInteractiveComponent () {
     console.error('updating', names.join(', '))
   }
   return (
-    <StdinContext.Consumer>
-      {({ stdin, setRawMode }) => {
-        readline.emitKeypressEvents(stdin)
-        setRawMode(true)
-        return (
-          <UpdatePicker
-            outdated={outdated}
-            stdin={stdin}
-            onSubmit={updateDeps}
-          />
-        )
-      }}
-    </StdinContext.Consumer>
+    <UpdatePicker
+      outdated={outdated}
+      stdin={stdin}
+      unicode={unicode}
+      onSubmit={updateDeps}
+    />
   )
 }
 
