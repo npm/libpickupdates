@@ -10,7 +10,7 @@ const STATES = {
   alreadyUpToDate: 'already-up-to-date'
 }
 
-export default function UpdateInteractiveComponent ({ stdin, unicode }) {
+export default function PickUpdatesComponent ({ stdin, unicode }) {
   const [state, setState] = useState(STATES.init)
   const [outdated, setOutdated] = useState([
     { name: 'lodash', wanted: '1.2.3', latest: '1.2.3', current: '1.2.0' },

@@ -3,9 +3,9 @@
 const React = require('react')
 const { render, StdinContext } = require('ink')
 const readline = require('readline')
-const UpdateInteractiveComponent = require('./dist/index.js').default
+const PickUpdatesComponent = require('./dist/index.js').default
 
-module.exports = UpdateInteractiveComponent
+module.exports = PickUpdatesComponent
 if (module === require.main) {
   render(
     React.createElement(
@@ -14,7 +14,7 @@ if (module === require.main) {
       ({ stdin, setRawMode }) => {
         readline.emitKeypressEvents(stdin)
         setRawMode(true)
-        return React.createElement(UpdateInteractiveComponent, {
+        return React.createElement(PickUpdatesComponent, {
           stdin,
           unicode: process.platform === 'darwin'
         })
