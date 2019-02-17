@@ -1,5 +1,6 @@
-import { Box, Color, Text } from 'ink'
-import React, { useEffect, useState } from 'react'
+import { Color, Text } from 'ink'
+import React, { useState } from 'react'
+import { List, ListItem } from './list'
 
 export default function UpdateInteractiveComponent ({ stdin, unicode }) {
   const [outdated, setOutdated] = useState([
@@ -9,6 +10,7 @@ export default function UpdateInteractiveComponent ({ stdin, unicode }) {
   const [updated, setUpdated] = useState(null)
   function updateDeps (names) {
     setUpdated(names)
+    process.exit(0)
   }
   return (
     !updated
@@ -37,57 +39,4 @@ function UpdatePicker ({ outdated = [], stdin, onSubmit, unicode }) {
       </List>
     </div>
   )
-}
-
-function List ({ children = [], stdin, onSubmit, unicode }) {
-  const cursorChar = unicode ? '❯' : '>'
-  const checkedChar = unicode ? '◉' : '[x]'
-  const uncheckedChar = unicode ? '◯' : '[ ]'
-  const [selected, setSelected] = useState(new Set())
-  const [cursor, setCursor] = useState(0)
-  useEffect(() => {
-    function onKeypress (data, key) {
-      if (key.name === 'up') {
-        setCursor(cursor === 0
-          ? children.length && children.length - 1
-          : (cursor + 1) % children.length
-        )
-      } else if (key.name === 'down') {
-        setCursor((cursor + 1) % children.length)
-      } else if (data === ' ' && children.length) {
-        const val = children[cursor].props.value
-        if (selected.has(val)) {
-          selected.delete(val)
-        } else {
-          selected.add(val)
-        }
-        setSelected(new Set(selected))
-      } else if (key.name === 'return') {
-        onSubmit([...selected])
-      }
-    }
-    stdin.on('keypress', onKeypress)
-    return () => {
-      stdin.removeListener('keypress', onKeypress)
-    }
-  })
-  return (
-    <Box flexDirection='column'>
-      {(children || []).map((child, i) => {
-        const cursorIcon = cursor === i ? cursorChar : ' '
-        const checkbox = selected.has(child.props.value)
-          ? checkedChar
-          : uncheckedChar
-        return (
-          <Box key={`${child.props.value}-box`}>
-            {cursorIcon} {checkbox} {child}
-          </Box>
-        )
-      })}
-    </Box>
-  )
-}
-
-function ListItem ({ selected, active, children }) {
-  return <Box>{children}</Box>
 }
