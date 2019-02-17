@@ -10,7 +10,7 @@ const STATES = {
   alreadyUpToDate: 'already-up-to-date'
 }
 
-export default function PickUpdatesComponent ({ stdin, unicode }) {
+export default function PickUpdatesComponent ({ stdin, onDone, unicode }) {
   const [state, setState] = useState(STATES.init)
   const [outdated, setOutdated] = useState([
     { name: 'lodash', wanted: '1.2.3', latest: '1.2.3', current: '1.2.0' },
@@ -38,13 +38,13 @@ export default function PickUpdatesComponent ({ stdin, unicode }) {
       onSubmit={updateDeps}
     />
   } else if (state === STATES.alreadyUpToDate) {
-    setImmediate(() => process.exit(0))
+    setImmediate(onDone)
     return <Text>Already up to date!</Text>
   } else if (state === STATES.updating) {
     setTimeout(() => setState(STATES.updated), 2000)
     return <Text>Installing updated deps...</Text>
   } else if (state === STATES.updated) {
-    setImmediate(() => process.exit(0))
+    setImmediate(onDone)
     return <Text>Updated deps: {updated.join(', ')}</Text>
   }
 }
