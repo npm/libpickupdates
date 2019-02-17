@@ -6,16 +6,19 @@ export default function UpdateInteractiveComponent ({ stdin, unicode }) {
     { name: 'lodash', wanted: '1.2.3', latest: '1.2.3', current: '1.2.0' },
     { name: 'libnpm', current: 'MISSING', wanted: '1.0.0', latest: '1.2.0' }
   ])
+  const [updated, setUpdated] = useState(null)
   function updateDeps (names) {
-    console.error('updating', names.join(', '))
+    setUpdated(names)
   }
   return (
-    <UpdatePicker
-      outdated={outdated}
-      stdin={stdin}
-      unicode={unicode}
-      onSubmit={updateDeps}
-    />
+    !updated
+      ? <UpdatePicker
+        outdated={outdated}
+        stdin={stdin}
+        unicode={unicode}
+        onSubmit={updateDeps}
+      />
+      : <Text>Updated deps: {updated.join(', ')}</Text>
   )
 }
 
@@ -59,6 +62,8 @@ function List ({ children = [], stdin, onSubmit, unicode }) {
           selected.add(val)
         }
         setSelected(new Set(selected))
+      } else if (key.name === 'return') {
+        onSubmit([...selected])
       }
     }
     stdin.on('keypress', onKeypress)
