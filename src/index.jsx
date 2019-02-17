@@ -19,11 +19,11 @@ export default function UpdateInteractiveComponent ({ stdin, unicode }) {
   )
 }
 
-function UpdatePicker ({ outdated = [], stdin, onSubmit }) {
+function UpdatePicker ({ outdated = [], stdin, onSubmit, unicode }) {
   return (
     <div>
-      <span>Select packages to update:</span>
-      <List stdin={stdin} onSubmit={onSubmit}>
+      <Text bold>~ Select packages to update.</Text>
+      <List stdin={stdin} onSubmit={onSubmit} unicode={unicode}>
         {(outdated || []).map(out => {
           return (
             <ListItem key={out.name} value={out.name}>
@@ -36,7 +36,10 @@ function UpdatePicker ({ outdated = [], stdin, onSubmit }) {
   )
 }
 
-function List ({ children = [], stdin, onSubmit }) {
+function List ({ children = [], stdin, onSubmit, unicode }) {
+  const cursorChar = unicode ? '❯' : '>'
+  const checkedChar = unicode ? '◉' : '[x]'
+  const uncheckedChar = unicode ? '◯' : '[ ]'
   const [selected, setSelected] = useState(new Set())
   const [cursor, setCursor] = useState(0)
   useEffect(() => {
@@ -66,8 +69,10 @@ function List ({ children = [], stdin, onSubmit }) {
   return (
     <Box flexDirection='column'>
       {(children || []).map((child, i) => {
-        const cursorIcon = cursor === i ? '>' : ' '
-        const checkbox = selected.has(child.props.value) ? '[x]' : '[ ]'
+        const cursorIcon = cursor === i ? cursorChar : ' '
+        const checkbox = selected.has(child.props.value)
+          ? checkedChar
+          : uncheckedChar
         return (
           <Box key={`${child.props.value}-box`}>
             {cursorIcon} {checkbox} {child}
