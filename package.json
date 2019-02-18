@@ -55,6 +55,7 @@
   "homepage": "https://npmjs.com/package/npm-update-interactive-component",
   "dependencies": {
     "ink": "^2.0.0-12",
+    "ink-spinner": "github:vadimdemedes/ink-spinner#next",
     "libnpm": "^2.0.1",
     "react": "^16.8.2",
     "semver": "^5.6.0"

@@ -1,5 +1,6 @@
-import { Text } from 'ink'
-import React, { useState } from 'react'
+import { Color, Text } from 'ink'
+import Spinner from 'ink-spinner'
+import React, { useEffect, useState } from 'react'
 import UpdatePicker from './update-picker'
 
 const STATES = {
@@ -12,24 +13,38 @@ const STATES = {
 
 export default function PickUpdatesComponent ({ stdin, onDone, unicode }) {
   const [state, setState] = useState(STATES.init)
-  const [outdated, setOutdated] = useState([
-    { name: 'lodash', wanted: '1.2.3', latest: '1.2.3', current: '1.2.0' },
-    { name: 'libnpm', current: 'MISSING', wanted: '1.0.0', latest: '1.2.0' }
-  ])
-  const [updated, setUpdated] = useState(null)
+  const [outdated, setOutdated] = useState(null)
+  const [updated, setUpdated] = useState([])
+  useEffect(getOutdated)
+  function getOutdated () {
+    setTimeout(() => {
+      setOutdated([
+        {
+          name: 'lodash',
+          wanted: '1.2.3',
+          latest: '1.2.3',
+          current: '1.2.0'
+        },
+        {
+          name: 'libnpm',
+          current: 'MISSING',
+          wanted: '1.0.0',
+          latest: '1.2.0'
+        }
+      ])
+    }, 1500)
+  }
   function updateDeps (names) {
+    setImmediate(() => setState(STATES.updating))
     setUpdated(names)
-    setState(STATES.updating)
   }
   if (state === STATES.init) {
-    setTimeout(() => {
-      if (outdated.length) {
-        setState(STATES.pickUpdates)
-      } else {
-        setState(STATES.alreadyUpToDate)
-      }
-    }, 2000)
-    return <Text>Loading...</Text>
+    if (outdated && outdated.length) {
+      setState(STATES.pickUpdates)
+    } else if (outdated) {
+      setState(STATES.alreadyUpToDate)
+    }
+    return <Text><Color green><Spinner /></Color> Checking dependency updates.</Text>
   } else if (state === STATES.pickUpdates) {
     return <UpdatePicker
       outdated={outdated}
@@ -42,9 +57,11 @@ export default function PickUpdatesComponent ({ stdin, onDone, unicode }) {
     return <Text>Already up to date!</Text>
   } else if (state === STATES.updating) {
     setTimeout(() => setState(STATES.updated), 2000)
-    return <Text>Installing updated deps...</Text>
+    return <Text><Color green><Spinner /></Color> Installing updated deps...</Text>
   } else if (state === STATES.updated) {
     setImmediate(onDone)
     return <Text>Updated deps: {updated.join(', ')}</Text>
+  } else {
+    return <Text>...</Text>
   }
 }
