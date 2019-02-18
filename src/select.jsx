@@ -1,9 +1,9 @@
-import { Box, Text } from 'ink'
+import { Box, Color, Text } from 'ink'
 import React, { useEffect, useState } from 'react'
 
 export function Select ({ children = [], stdin, onSubmit, unicode }) {
   const cursorChar = unicode ? '❯' : '>'
-  const checkedChar = unicode ? '◉' : '[x]'
+  const checkedChar = <Color green>{unicode ? '◉' : '[x]'}</Color>
   const uncheckedChar = unicode ? '◯' : '[ ]'
   const [selected, setSelected] = useState(new Set())
   const [cursor, setCursor] = useState(0)
