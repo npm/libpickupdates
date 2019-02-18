@@ -5,6 +5,7 @@ import UpdatePicker from './update-picker'
 
 const STATES = {
   init: 'init',
+  fetchOutdated: 'fetch-outdated',
   pickUpdates: 'pick-updates',
   updating: 'updating',
   updated: 'updated',
@@ -17,6 +18,12 @@ export default function PickUpdatesComponent ({ stdin, onDone, unicode }) {
   const [updated, setUpdated] = useState([])
   useEffect(getOutdated)
   function getOutdated () {
+  }
+  function updateDeps (names) {
+    setImmediate(() => setState(STATES.updating))
+    setUpdated(names)
+  }
+  if (state === STATES.init) {
     setTimeout(() => {
       setOutdated([
         {
@@ -33,12 +40,8 @@ export default function PickUpdatesComponent ({ stdin, onDone, unicode }) {
         }
       ])
     }, 1500)
-  }
-  function updateDeps (names) {
-    setImmediate(() => setState(STATES.updating))
-    setUpdated(names)
-  }
-  if (state === STATES.init) {
+    setState(STATES.fetchOutdated)
+  } else if (state === STATES.fetchOutdated) {
     if (outdated && outdated.length) {
       setState(STATES.pickUpdates)
     } else if (outdated) {
