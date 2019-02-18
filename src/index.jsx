@@ -12,34 +12,24 @@ const STATES = {
   alreadyUpToDate: 'already-up-to-date'
 }
 
-export default function PickUpdatesComponent ({ stdin, onDone, unicode }) {
+export default function PickUpdatesComponent ({
+  stdin, onDone, unicode, getOutdated, installUpdates
+}) {
   const [state, setState] = useState(STATES.init)
   const [outdated, setOutdated] = useState(null)
   const [updated, setUpdated] = useState([])
   function updateDeps (names) {
     setImmediate(() => setState(STATES.updating))
+    installUpdates(names).then(() => {
+      setState(STATES.updated)
+    })
     setUpdated(names)
   }
   if (state === STATES.init) {
-    setTimeout(() => {
-      setOutdated([
-        {
-          name: 'lodash',
-          wanted: '1.2.3',
-          latest: '1.2.3',
-          current: '1.2.0'
-        },
-        {
-          name: 'libnpm',
-          current: 'MISSING',
-          wanted: '1.0.0',
-          latest: '1.2.0'
-        }
-      ])
-    }, 1500)
+    getOutdated().then(setOutdated)
     setState(STATES.fetchOutdated)
   } else if (state === STATES.fetchOutdated) {
-    if (outdated && outdated.length) {
+    if (outdated && Object.keys(outdated).length) {
       setState(STATES.pickUpdates)
     } else if (outdated) {
       setState(STATES.alreadyUpToDate)
@@ -56,7 +46,6 @@ export default function PickUpdatesComponent ({ stdin, onDone, unicode }) {
     setImmediate(onDone)
     return <Text>already up to date!</Text>
   } else if (state === STATES.updating) {
-    setTimeout(() => setState(STATES.updated), 2000)
     return <Text><Color green><Spinner /></Color> installing updated deps</Text>
   } else if (state === STATES.updated) {
     setImmediate(onDone)

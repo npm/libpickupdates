@@ -3,18 +3,24 @@ import { Color, Text } from 'ink'
 import { Select, Option, OptGroup } from './select'
 import semver from 'semver'
 
-export default function UpdatePicker ({ outdated = [], stdin, onSubmit, unicode }) {
-  const major = outdated.filter(out => out.current !== 'MISSING' && semver.diff(out.current, out.wanted) === 'major')
-  const minor = outdated.filter(out => out.current !== 'MISSING' && semver.diff(out.current, out.wanted) === 'minor')
-  const patch = outdated.filter(out => out.current !== 'MISSING' && semver.diff(out.current, out.wanted) === 'patch')
+export default function UpdatePicker ({ outdated = {}, stdin, onSubmit, unicode }) {
+  outdated = Object.keys(outdated).map(k => {
+    return {
+      name: k,
+      ...(outdated[k])
+    }
+  })
+  const major = filterSemver(outdated, 'major')
+  const minor = filterSemver(outdated, 'minor')
+  const patch = filterSemver(outdated, 'patch')
   const preDiffs = new Set([
     'premajor',
     'preminor',
     'prepatch',
     'prerelease'
   ])
-  const pre = outdated.filter(out => out.current !== 'MISSING' && preDiffs.has(semver.diff(out.current, out.wanted)))
-  const missing = outdated.filter(out => out.current === 'MISSING')
+  const pre = filterSemver(outdated, preDiffs)
+  const other = outdated.filter(out => !semver.valid(out.current) || !semver.valid(out.wanted))
   return (
     <div>
       <Text bold><Color green>?</Color> select packages to update</Text>
@@ -80,11 +86,11 @@ export default function UpdatePicker ({ outdated = [], stdin, onSubmit, unicode 
           </OptGroup>
         }
         {
-          missing.length && <OptGroup label={
-            <Color yellow>{'\nneeds install'}</Color>
+          other.length && <OptGroup label={
+            <Color yellow>{'\nother'}</Color>
           }>
             {
-              missing.map(out => {
+              other.map(out => {
                 return (
                   <Option key={out.name} value={out.name}>
                     <Outdated item={out} />
@@ -101,4 +107,18 @@ export default function UpdatePicker ({ outdated = [], stdin, onSubmit, unicode 
 
 function Outdated ({ item }) {
   return <Color green>{item.name}</Color>
+}
+
+function filterSemver (outdated, type) {
+  return outdated.filter(out => {
+    return (
+      semver.valid(out.wanted, true) &&
+      semver.valid(out.current, true) &&
+      (
+        typeof type === 'string'
+          ? semver.diff(out.current, out.wanted, true) === type
+          : type.has(semver.diff(out.current, out.wanted, true))
+      )
+    )
+  })
 }
