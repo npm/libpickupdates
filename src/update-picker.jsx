@@ -27,7 +27,7 @@ export default function UpdatePicker ({ outdated = {}, stdin, onSubmit, unicode 
       <Select stdin={stdin} onSubmit={onSubmit} unicode={unicode}>
         {
           major.length && <OptGroup label={
-            <Color red>{'\napi-breaking updates'}</Color>
+            <Color red>{'\napi-breaking changes'}</Color>
           }>
             {
               major.map(out => {
@@ -42,7 +42,7 @@ export default function UpdatePicker ({ outdated = {}, stdin, onSubmit, unicode 
         }
         {
           minor.length && <OptGroup label={
-            <Color blue>{'\nnew feature updates'}</Color>
+            <Color blue>{'\nnew features'}</Color>
           }>
             {
               minor.map(out => {
@@ -57,7 +57,7 @@ export default function UpdatePicker ({ outdated = {}, stdin, onSubmit, unicode 
         }
         {
           patch.length && <OptGroup label={
-            '\nbugfix updates'
+            '\nbugfixes and other small changes'
           }>
             {
               patch.map(out => {
@@ -105,8 +105,21 @@ export default function UpdatePicker ({ outdated = {}, stdin, onSubmit, unicode 
   )
 }
 
-function Outdated ({ item }) {
-  return <Color green>{item.name}</Color>
+function Outdated ({
+  item: {
+    name, type, current, wanted, homepage
+  }
+}) {
+  return (
+    <Text>
+      {name}
+      <Color green> {type.replace(/endencies/i, '')}</Color>
+      <Text bold> {current}</Text>
+      {' >'}
+      <Text bold> {wanted}</Text>
+      <Color blue> {homepage}</Color>
+    </Text>
+  )
 }
 
 function filterSemver (outdated, type) {
