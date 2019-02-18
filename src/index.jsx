@@ -1,6 +1,6 @@
 import { Color, Text } from 'ink'
 import Spinner from 'ink-spinner'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import UpdatePicker from './update-picker'
 
 const STATES = {
@@ -16,9 +16,6 @@ export default function PickUpdatesComponent ({ stdin, onDone, unicode }) {
   const [state, setState] = useState(STATES.init)
   const [outdated, setOutdated] = useState(null)
   const [updated, setUpdated] = useState([])
-  useEffect(getOutdated)
-  function getOutdated () {
-  }
   function updateDeps (names) {
     setImmediate(() => setState(STATES.updating))
     setUpdated(names)
