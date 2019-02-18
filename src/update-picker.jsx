@@ -17,11 +17,11 @@ export default function UpdatePicker ({ outdated = [], stdin, onSubmit, unicode 
   const missing = outdated.filter(out => out.current === 'MISSING')
   return (
     <div>
-      <Text bold><Color green>?</Color> Select packages to update.</Text>
+      <Text bold><Color green>?</Color> select packages to update</Text>
       <Select stdin={stdin} onSubmit={onSubmit} unicode={unicode}>
         {
           major.length && <OptGroup label={
-            <Color red>{'\nAPI-breaking updates'}</Color>
+            <Color red>{'\napi-breaking updates'}</Color>
           }>
             {
               major.map(out => {
@@ -36,7 +36,7 @@ export default function UpdatePicker ({ outdated = [], stdin, onSubmit, unicode 
         }
         {
           minor.length && <OptGroup label={
-            <Color blue>{'\nNew feature updates'}</Color>
+            <Color blue>{'\nnew feature updates'}</Color>
           }>
             {
               minor.map(out => {
@@ -51,7 +51,7 @@ export default function UpdatePicker ({ outdated = [], stdin, onSubmit, unicode 
         }
         {
           patch.length && <OptGroup label={
-            '\nBugfix updates'
+            '\nbugfix updates'
           }>
             {
               patch.map(out => {
@@ -66,7 +66,7 @@ export default function UpdatePicker ({ outdated = [], stdin, onSubmit, unicode 
         }
         {
           pre.length && <OptGroup label={
-            '\nPrerelease updates'
+            '\nprerelease updates'
           }>
             {
               pre.map(out => {
@@ -81,7 +81,7 @@ export default function UpdatePicker ({ outdated = [], stdin, onSubmit, unicode 
         }
         {
           missing.length && <OptGroup label={
-            <Color yellow>{'\nNeeds install'}</Color>
+            <Color yellow>{'\nneeds install'}</Color>
           }>
             {
               missing.map(out => {

@@ -47,7 +47,7 @@ export default function PickUpdatesComponent ({ stdin, onDone, unicode }) {
     } else if (outdated) {
       setState(STATES.alreadyUpToDate)
     }
-    return <Text><Color green><Spinner /></Color> Checking dependency updates.</Text>
+    return <Text><Color green><Spinner /></Color> checking dependency updates</Text>
   } else if (state === STATES.pickUpdates) {
     return <UpdatePicker
       outdated={outdated}
@@ -57,13 +57,13 @@ export default function PickUpdatesComponent ({ stdin, onDone, unicode }) {
     />
   } else if (state === STATES.alreadyUpToDate) {
     setImmediate(onDone)
-    return <Text>Already up to date!</Text>
+    return <Text>already up to date!</Text>
   } else if (state === STATES.updating) {
     setTimeout(() => setState(STATES.updated), 2000)
-    return <Text><Color green><Spinner /></Color> Installing updated deps...</Text>
+    return <Text><Color green><Spinner /></Color> installing updated deps</Text>
   } else if (state === STATES.updated) {
     setImmediate(onDone)
-    return <Text>Updated deps: {updated.join(', ')}</Text>
+    return <Text>updated {updated.length} deps</Text>
   } else {
     return <Text>...</Text>
   }
