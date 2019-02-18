@@ -19,7 +19,7 @@ export default function PickUpdatesComponent ({
   const [outdated, setOutdated] = useState(null)
   const [updated, setUpdated] = useState([])
   function updateDeps (names) {
-    setImmediate(() => setState(STATES.updating))
+    setState(STATES.updating)
     installUpdates(names).then(() => {
       setState(STATES.updated)
     })

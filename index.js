@@ -73,7 +73,7 @@ if (module === require.main) {
               if (names.length) {
                 setTimeout(resolve, 1500)
               } else {
-                resolve(names)
+                resolve()
               }
             })
           }
