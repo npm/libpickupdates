@@ -16,7 +16,10 @@ if (module === require.main) {
         setRawMode(true)
         return React.createElement(PickUpdatesComponent, {
           stdin,
-          unicode: process.platform === 'darwin'
+          unicode: process.platform === 'darwin',
+          onDone () {
+            process.exit(0)
+          }
         })
       }
     )
