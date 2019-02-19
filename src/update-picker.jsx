@@ -113,7 +113,7 @@ function Outdated ({
   return (
     <Text>
       {name}
-      <Color green> {type.replace(/endencies/i, '')}</Color>
+      {type && <Color green> {type.replace(/endencies/i, '')}</Color>}
       <Text bold> {current}</Text>
       {' >'}
       <Text bold> {wanted}</Text>
