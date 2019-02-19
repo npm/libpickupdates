@@ -7,7 +7,7 @@ const PickUpdatesComponent = require('./dist/index.js').default
 
 module.exports = PickUpdatesComponent
 if (module === require.main) {
-  render(
+  const app = render(
     React.createElement(
       AppContext.Consumer,
       {},
@@ -20,6 +20,7 @@ if (module === require.main) {
             setRawMode(true)
             stdin.on('keypress', key => {
               if (key === '\u0003') {
+                console.error('pressed ^C')
                 exit()
               }
             })
@@ -31,6 +32,7 @@ if (module === require.main) {
               },
               getOutdated () {
                 return new Promise((resolve, reject) => {
+                  reject(new Error('fail'))
                   setTimeout(() => {
                     resolve({
                       '@babel/core': {
@@ -93,4 +95,5 @@ if (module === require.main) {
       exitOnCtrlC: false
     }
   )
+  app.waitUntilExit()
 }
