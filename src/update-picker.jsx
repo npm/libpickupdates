@@ -4,9 +4,9 @@ import { Select, Option, OptGroup } from './select'
 import semver from 'semver'
 
 const types = [
-  'dependency',
-  'optionalDependency',
-  'devDependency'
+  'dependencies',
+  'optionalDependencies',
+  'devDependencies'
 ]
 export default function UpdatePicker ({ outdated = {}, stdin, onSubmit, unicode }) {
   outdated = Object.keys(outdated).map(k => {
@@ -18,9 +18,9 @@ export default function UpdatePicker ({ outdated = {}, stdin, onSubmit, unicode 
     if (x.type === y.type) {
       return 0
     } else if (types.indexOf(x.type) > types.indexOf(y.type)) {
-      return -1
-    } else {
       return 1
+    } else {
+      return -1
     }
   })
   const major = filterSemver(outdated, 'major')
