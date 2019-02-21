@@ -49,8 +49,8 @@ export default function PickUpdatesComponent ({
     return <Text>installing updated deps</Text>
   } else if (state === STATES.updated) {
     setImmediate(onDone)
-    return <Text>updated {updated.length} deps</Text>
+    return <Text>{''}</Text>
   } else {
-    return <Text>...</Text>
+    return <Text>{''}</Text>
   }
 }
